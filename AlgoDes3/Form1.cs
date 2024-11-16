@@ -118,8 +118,11 @@ namespace AlgoDes3
 
             string data = textBoxData.Text;
             AVLNode record = new AVLNode(key, data, null);
-            AvlTree.AddRecord(record);
-            LabelAdd(170, 20, 320, 120, "Message", "Додано", ContentAlignment.MiddleCenter);
+            bool isAdded = AvlTree.AddRecord(record);
+            if(isAdded)
+                LabelAdd(170, 20, 320, 120, "Message", "Додано", ContentAlignment.MiddleCenter);
+            else
+                LabelAdd(170, 40, 320, 110, "Message", "Запис із цим ключем вже існує", ContentAlignment.MiddleCenter);
         }
 
         //Знайти

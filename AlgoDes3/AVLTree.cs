@@ -61,7 +61,7 @@ namespace AlgoDes3
         }
         
         //пошук нода, де вставити
-        private AVLNode FindNodeToInsert(int key)
+        private AVLNode FindNodeWhereInsert(int key)
         {
             AVLNode current = Root;
             while (current != null)
@@ -182,7 +182,7 @@ namespace AlgoDes3
         private void Add(AVLNode avlNode)
         {
             AVLNode nodeToInsert = new AVLNode(avlNode.Key, avlNode.Data, null);
-            AVLNode nodeParentToInsert = FindNodeToInsert(nodeToInsert.Key);
+            AVLNode nodeParentToInsert = FindNodeWhereInsert(nodeToInsert.Key);
             if (avlNode.Key < nodeParentToInsert.Key)
                 nodeParentToInsert.Left = nodeToInsert;
             else
@@ -194,8 +194,13 @@ namespace AlgoDes3
         }
 
         //додавання записа
-        public void AddRecord(AVLNode avlNode)
+        public bool AddRecord(AVLNode avlNode)
         {
+            //Перевірити, чи нема такого запису
+            AVLNode nodeToCheck = FindNode(avlNode.Key);
+            if (nodeToCheck != null)
+                return false;
+            
             using (StreamWriter file = new StreamWriter(fileName, true))
             {
                 file.Write(avlNode.Key.ToString() + ' ');
@@ -207,14 +212,14 @@ namespace AlgoDes3
             {
                 Root = new AVLNode(avlNode.Key, avlNode.Data, null);
                 records.Add((avlNode.Key, avlNode.Data));
-                return;
+                return true;
             }
-
+            
             records.Add((avlNode.Key, avlNode.Data));
 
             //якщо вже є записи
             AVLNode nodeToInsert = new AVLNode(avlNode.Key, avlNode.Data, null);
-            AVLNode nodeParentToInsert = FindNodeToInsert(nodeToInsert.Key);
+            AVLNode nodeParentToInsert = FindNodeWhereInsert(nodeToInsert.Key);
             if (avlNode.Key < nodeParentToInsert.Key)
                 nodeParentToInsert.Left = nodeToInsert;
             else
@@ -223,6 +228,7 @@ namespace AlgoDes3
 
             BalanceTree(nodeParentToInsert);
             RewriteFileCLR(Root);
+            return true;
         }
 
         //редагування запису
